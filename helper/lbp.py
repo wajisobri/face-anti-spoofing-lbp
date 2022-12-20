@@ -19,25 +19,27 @@ def lbp_histogram(image,P=8,R=1,method = 'nri_uniform'):
     # plt.show()
     return hist
 
-def save_feature(image_path,label,path_feature,color_space):
+def save_feature(image_path,label,path_feature,color_space,p,r):
   feature_label = []
   image = cv2.imread(image_path)
 
   image_ycbcr = cv2.cvtColor(image, cv2.COLOR_BGR2YCrCb)
-  y_h = lbp_histogram(image_ycbcr[:,:,0]) # y channel
-  cb_h = lbp_histogram(image_ycbcr[:,:,1]) # cb channel
-  cr_h = lbp_histogram(image_ycbcr[:,:,2]) # cr channel
+  y_h = lbp_histogram(image_ycbcr[:,:,0],p,r) # y channel
+  cb_h = lbp_histogram(image_ycbcr[:,:,1],p,r) # cb channel
+  cr_h = lbp_histogram(image_ycbcr[:,:,2],p,r) # cr channel
 
   image_hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-  h_h = lbp_histogram(image_hsv[:,:,0]) # h channel
-  s_h = lbp_histogram(image_hsv[:,:,1]) # s channel
-  v_h = lbp_histogram(image_hsv[:,:,2]) # v channel
+  h_h = lbp_histogram(image_hsv[:,:,0],p,r) # h channel
+  s_h = lbp_histogram(image_hsv[:,:,1],p,r) # s channel
+  v_h = lbp_histogram(image_hsv[:,:,2],p,r) # v channel
 
   if color_space == 'YCBCR':
     feature = np.concatenate((y_h,cb_h,cr_h))
   elif color_space == 'HSV':
     feature = np.concatenate((h_h, s_h, v_h))
   elif color_space == 'YCBCR_HSV':
+    feature = np.concatenate((y_h,cb_h,cr_h, h_h, s_h, v_h))
+  elif color_space == 'YCBCR_HSV_R2':
     feature = np.concatenate((y_h,cb_h,cr_h, h_h, s_h, v_h))
 
   feature_label.append(np.append(feature,np.array(label)))
@@ -70,7 +72,9 @@ def test_one(file_name, color_space):
   elif color_space == 'HSV':
     model = joblib.load("./model_hsv.m")
   elif color_space == 'YCBCR_HSV':
-    model = joblib.load("./model_ycbcr_hsv.m")
+    model = joblib.load("./model_ycbcr+hsv.m")
+  elif color_space == 'YCBCR_HSV_R2':
+    model = joblib.load("./model_r2_ycbcr+hsv.m")
 
   predict_proba = model.predict_proba(test_feature)
   predict = model.predict(test_feature)

@@ -25,7 +25,10 @@ def main():
     image_file.save(path)
 
     path_feature = os.path.join(app.config["UPLOAD_FOLDER"], "image_feature.npy")
-    save_feature(path,0,path_feature,color_space)
+    if color_space == 'YCBCR_HSV_R2':
+      save_feature(path,0,path_feature,color_space,16,2)
+    else:
+      save_feature(path,0,path_feature,color_space,8,1)
 
     image_predict_proba, image_predict = test_one(path_feature, color_space)
     app.logger.info(image_predict_proba)
@@ -35,4 +38,4 @@ def main():
     else:
       message = "FALSE"
 
-    return render_template('login.html', message=message, uploaded_image=path, image_predict_proba=image_predict_proba)
+    return render_template('login.html', message=message, uploaded_image=path, image_predict_proba=image_predict_proba, image_predict=image_predict)

@@ -43,9 +43,9 @@
                                     {% if uploaded_image is defined %}
                                         <img src="{{ uploaded_image }}" width="120" alt="user-image" class="rounded-circle img-thumbnail">
                                         <p class="text-muted my-4">Probability:<br>{{ image_predict_proba[0][0] }} (Spoof)<br>{{ image_predict_proba[0][1] }} (Real)</p>
-                                    {% else %}
+                                        {% else %}
                                         <img src="static/assets/images/users/avatar.png" width="120" alt="user-image" class="rounded-circle img-thumbnail">
-                                        <p class="text-muted my-4">Enter your face image to access the admin.</p>
+                                        <p class="text-muted my-4">Enter your face image to access.</p>
                                     {% endif %}
                                 </div>
 
@@ -62,6 +62,7 @@
                                             <option value="YCBCR">YCBCR</option>
                                             <option value="HSV">HSV</option>
                                             <option value="YCBCR_HSV">YCBCR + HSV</option>
+                                            <option value="YCBCR_HSV_R2">YCBCR + HSV (Radius 2)</option>
                                         </select>
                                     </div>
 
